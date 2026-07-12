@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaVoyage | AI Smart Tourist Chatbot & Trip Advisor</title>
+  <meta name="description" content="NovaVoyage is an interactive, AI-simulated travel chatbot and tourist advisor. Discover destination details, plan 3-day itineraries, estimate budgets, translate phrases, and explore mapped sights.">
+  
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <!-- Custom SVG Globe Icon -->
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+        <path d="M2 12h20"></path>
+      </svg>
+      <h1>NovaVoyage</h1>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav aria-label="Main Navigation">
+      <ul class="nav-menu" id="sidebarNav">
+        <li class="nav-item">
+          <button class="nav-link active" data-tab="explore" id="navExploreBtn">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <span>Explore Ideas</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-tab="itinerary" id="navItineraryBtn">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+            <span>Itinerary Planner</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-tab="guides" id="navGuidesBtn">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <span>Local Guides</span>
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-tab="map" id="navMapBtn">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+            <span>Interactive Map</span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Bookmarked Trips -->
+    <div class="widget-box">
+      <span class="widget-title">💼 Saved Trips</span>
+      <div id="savedList" style="display:flex; flex-direction:column; gap:0.25rem;">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+
+    <!-- Widgets Container -->
+    <div class="sidebar-widgets">
+      
+      <!-- Weather Simulator -->
+      <div class="widget-box">
+        <span class="widget-title">⛅ Destination Climate</span>
+        <div class="weather-widget">
+          <div class="weather-info">
+            <span class="weather-temp" id="weatherTemp">--°C</span>
+            <span class="weather-loc" id="weatherLoc">Select a city</span>
+          </div>
+          <span class="weather-icon" id="weatherIcon">☀️</span>
+        </div>
+      </div>
+
+      <!-- Currency Calculator -->
+      <div class="widget-box">
+        <span class="widget-title">💸 Currency exchange</span>
+        <div class="currency-widget">
+          <div class="currency-row">
+            <input type="number" id="currencyAmount" value="100" min="0" />
+            <select id="currencySelect" aria-label="Select Currency">
+              <!-- Filled by JS -->
+            </select>
+          </div>
+          <div class="currency-result" id="currencyResult">--</div>
+        </div>
+      </div>
+
+      <!-- Theme Controls -->
+      <div class="widget-box">
+        <span class="widget-title">🎨 Theme Style</span>
+        <div class="theme-selector">
+          <button class="theme-btn active" data-theme="aurora" id="themeBtnAurora">Aurora</button>
+          <button class="theme-btn" data-theme="solar" id="themeBtnSolar">Solar</button>
+          <button class="theme-btn" data-theme="cyber" id="themeBtnCyber">Cyber</button>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- CENTER WORKSPACE -->
+  <main class="workspace">
+    <header class="workspace-header">
+      <div class="workspace-title">
+        <h2 id="workspaceTitle">Explore Destinations</h2>
+        <p id="workspaceSub">Discover stunning cities, beaches, and cultural hubs around the world.</p>
+      </div>
+      <div style="display:flex; gap:0.5rem; align-items:center;">
+        <button class="mobile-sidebar-toggle" id="mobileSidebarToggle" aria-label="Toggle Sidebar Menu">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="workspace-content">
+      
+      <!-- EXPLORE TAB -->
+      <section id="exploreTab" class="tab-content active" aria-labelledby="navExploreBtn">
+        <div class="explore-controls">
+          <input type="text" id="searchDest" placeholder="Search destinations (e.g. Paris, food, nature)..." class="filter-select" style="flex:1; min-width:200px;" />
+          
+          <select id="filterContinent" class="filter-select" aria-label="Filter by Continent">
+            <option value="">All Continents</option>
+            <option value="asia">Asia</option>
+            <option value="europe">Europe</option>
+            <option value="africa">Africa</option>
+            <option value="america">Americas</option>
+          </select>
+
+          <select id="filterBudget" class="filter-select" aria-label="Filter by Budget Range">
+            <option value="">All Budgets</option>
+            <option value="$">$ Budget-friendly</option>
+            <option value="$$">$$ Mid-range</option>
+            <option value="$$$">$$$ Luxury</option>
+          </select>
+        </div>
+
+        <div class="explore-grid" id="exploreGrid">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- ITINERARY TAB -->
+      <section id="itineraryTab" class="tab-content" aria-labelledby="navItineraryBtn">
+        <!-- Loaded by JS based on active destination selection -->
+      </section>
+
+      <!-- LOCAL GUIDES TAB -->
+      <section id="guidesTab" class="tab-content" aria-labelledby="navGuidesBtn">
+        <!-- Loaded by JS -->
+      </section>
+
+      <!-- INTERACTIVE MAP TAB -->
+      <section id="mapTab" class="tab-content" aria-labelledby="navMapBtn">
+        <div class="map-layout">
+          <!-- The Vector Map Panel -->
+          <div class="vector-map-panel">
+            <div class="map-grid-overlay"></div>
+            <!-- Interactive City Pins (absolute positioned percentages) -->
+            <div class="map-pins-container" id="mapPinsContainer">
+              <button class="map-pin" style="top: 28%; left: 16%;" data-id="newyork" title="New York City">
+                <span class="pin-glow"></span>
+                <span class="pin-dot"></span>
+              </button>
+              <button class="map-pin" style="top: 60%; left: 30%;" data-id="riodejaneiro" title="Rio de Janeiro">
+                <span class="pin-glow"></span>
+                <span class="pin-dot"></span>
+              </button>
+              <button class="map-pin" style="top: 26%; left: 45%;" data-id="paris" title="Paris">
+                <span class="pin-glow"></span>
+                <span class="pin-dot"></span>
+              </button>
+              <button class="map-pin" style="top: 32%; left: 48%;" data-id="rome" title="Rome">
+                <span class="pin-glow"></span>
+                <span class="pin-dot"></span>
+              </button>
+              <button class="map-pin" style="top: 40%; left: 54%;" data-id="cairo" title="Cairo">
+                <span class="pin-glow"></span>
+                <span class="pin-dot"></span>
+              </button>
+              <button class="map-pin" style="top: 75%; left: 53%;" data-id="capetown" title="Cape Town">
+                <span class="pin-glow"></span>
+                <span class="pin-dot"></span>
+              </button>
+              <button class="map-pin" style="top: 30%; left: 81%;" data-id="tokyo" title="Tokyo">
+                <span class="pin-glow"></span>
+                <span class="pin-dot"></span>
+              </button>
+              <button class="map-pin" style="top: 62%; left: 77%;" data-id="bali" title="Bali">
+                <span class="pin-glow"></span>
+                <span class="pin-dot"></span>
+              </button>
+            </div>
+            <!-- Styled SVG World Map Background Outline -->
+            <svg class="world-map-svg" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor" stroke-width="1.5">
+              <!-- North America -->
+              <path d="M70 60 C120 40, 220 60, 270 110 C300 140, 280 210, 240 240 C200 260, 170 210, 120 190 C90 170, 70 140, 70 60 Z" fill="rgba(255,255,255,0.015)" stroke="var(--border-color)" stroke-dasharray="4 4" />
+              <!-- South America -->
+              <path d="M230 250 C270 250, 290 290, 300 340 C310 380, 280 420, 260 440 C240 450, 230 420, 220 390 C210 360, 200 310, 230 250 Z" fill="rgba(255,255,255,0.015)" stroke="var(--border-color)" stroke-dasharray="4 4" />
+              <!-- Europe -->
+              <path d="M400 80 C480 60, 530 90, 550 140 C530 180, 480 200, 450 180 C420 160, 380 140, 400 80 Z" fill="rgba(255,255,255,0.015)" stroke="var(--border-color)" stroke-dasharray="4 4" />
+              <!-- Africa -->
+              <path d="M440 190 C490 190, 550 210, 570 260 C590 300, 570 360, 540 400 C520 430, 510 400, 490 340 C460 300, 420 250, 440 190 Z" fill="rgba(255,255,255,0.015)" stroke="var(--border-color)" stroke-dasharray="4 4" />
+              <!-- Asia -->
+              <path d="M530 80 C610 30, 790 40, 840 100 C870 140, 840 200, 790 220 C740 240, 710 280, 670 300 C630 310, 590 260, 570 210 C550 160, 490 130, 530 80 Z" fill="rgba(255,255,255,0.015)" stroke="var(--border-color)" stroke-dasharray="4 4" />
+              <!-- Australia / Islands -->
+              <path d="M740 320 C790 310, 830 330, 840 360 C830 390, 790 400, 760 380 C730 360, 720 340, 740 320 Z" fill="rgba(255,255,255,0.015)" stroke="var(--border-color)" stroke-dasharray="4 4" />
+            </svg>
+          </div>
+          <!-- Sidebar detail box for the selected map city -->
+          <div class="map-detail-sidebar" id="mapDetailSidebar">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- RIGHT CHAT PANEL (AI CHATBOT) -->
+  <aside class="chat-panel" id="chatPanel">
+    <div class="chat-header">
+      <div class="chat-agent">
+        <div class="agent-avatar">
+          <div class="agent-avatar-inner">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
+          <span class="agent-status-dot"></span>
+        </div>
+        <div class="agent-meta">
+          <h4>Nova Advisor</h4>
+          <p>AI Travel Assistant</p>
+        </div>
+      </div>
+      <button class="chat-clear-btn" id="clearChatBtn" title="Clear Chat History">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+      </button>
+    </div>
+
+    <!-- Chat History Bubbles -->
+    <div class="chat-history" id="chatHistory">
+      <!-- Filled by JS -->
+    </div>
+
+    <!-- Quick action shortcuts -->
+    <div class="quick-actions-container" id="quickActions">
+      <button class="quick-action-btn" onclick="window.botAction('recommend')" id="qaRecommend">🌟 Suggest Ideas</button>
+      <button class="quick-action-btn" onclick="window.botAction('help_itinerary')" id="qaItinerary">🎒 Suggest Itinerary</button>
+      <button class="quick-action-btn" onclick="window.botAction('help_budget')" id="qaBudget">💸 Expense Help</button>
+      <button class="quick-action-btn" onclick="window.botAction('help_language')" id="qaPhrases">🗣️ Phrasebooks</button>
+    </div>
+
+    <!-- Chat Input Controls -->
+    <div class="chat-input-bar">
+      <div class="chat-input-container">
+        <input type="text" id="chatInput" placeholder="Ask your advisor..." aria-label="Type message here" autocomplete="off" />
+        <button class="chat-mic-btn" id="micBtn" title="Speak to chatbot" aria-label="Use Microphone">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+            <line x1="12" y1="19" x2="12" y2="23"></line>
+            <line x1="8" y1="23" x2="16" y2="23"></line>
+          </svg>
+        </button>
+      </div>
+      <button class="chat-send-btn" id="sendBtn" title="Send message" aria-label="Send message button">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Toggle Chat Floating button on Mobile -->
+  <button class="mobile-chat-toggle" id="mobileChatToggle" aria-label="Toggle Chat Window">
+    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+  </button>
+
+  <!-- Application scripts -->
+  <script src="data.js"></script>
+  <script src="bot.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>
